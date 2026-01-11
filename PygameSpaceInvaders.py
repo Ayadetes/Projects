@@ -1,6 +1,9 @@
 import math
 import pygame
 import time
+from pygame import mixer
+
+pygame.mixer.init()
 
 PlayerData = {"ProfilePic": pygame.image.load("Spaceship.png"), "PosX": 370, "PosXChange": 0, "PosY": 380, "Speed": 5}
 EnemyData = [[],[],[],[],[],[],[],[]]
@@ -14,6 +17,7 @@ for i in range(7):
 screen_width = 800
 screen_height = 500
 Bullet_speed_y = 10
+PygameSound = pygame.mixer.Sound("Pew.mp3")
 collision_distance = 27
 PlayerSpeed = PlayerData["Speed"]
 playerX = PlayerData["PosX"]
@@ -95,6 +99,7 @@ while running:
                     Bullet_State = "debounce"
                     time.sleep(0.2)
                     Bullet_state = "ready"
+                    PygameSound.play()
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
