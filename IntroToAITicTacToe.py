@@ -42,7 +42,7 @@ def player_move(board, symbol):
     Move = input(Fore.GREEN + "Enter a number (1-9) to place your symbol: " + Style.RESET_ALL).strip()
     Move = int(Move) - 1  # Convert to 0-based index
     if 0 <= Move <= 8 and board[Move].isdigit():
-        print(f"Moved to location {Move}")
+        print(f"Moved to location {Move + 1}")
         board[Move] = symbol
 
 
@@ -51,26 +51,32 @@ def player_move(board, symbol):
 # ==========================================================
 def ai_move(board, ai_symbol, player_symbol):
     # TODO A: Try to win in 1 move
-    for i in range(9):
-        if board[i].isdigit():
-            boardcopy = board.copy()
-            boardcopy[i] = ai_symbol
-            if check_win(boardcopy, player_symbol):
-                board[i] = ai_symbol
-                return
-    # TODO B: Try to block player win in 1 move
-    for i in range(9):
-        if board[i].isdigit():
-            boardcopy = board.copy()
-            boardcopy[i] = player_symbol
-            if check_win(boardcopy, player_symbol):
-                board[i] = ai_symbol
-                return
-    
-    possiblemoves = [i for i in range(9) if board[i].isdigit()]
+    if check_full(board):
+        return
+    else: 
+        for i in range(9):
+            if board[i].isdigit():
+                boardcopy = board.copy()
+                boardcopy[i] = ai_symbol
+                if check_win(boardcopy, player_symbol):
+                    board[i] = ai_symbol
+                    print(f"AI places at location {i + 1}")
+                    return
+        # TODO B: Try to block player win in 1 move
+        for i in range(9):
+            if board[i].isdigit():
+                boardcopy = board.copy()
+                boardcopy[i] = player_symbol
+                if check_win(boardcopy, player_symbol):
+                    board[i] = ai_symbol
+                    print(f"AI places at location {i + 1}")
+                    return
+        
+        possiblemoves = [i for i in range(9) if board[i].isdigit()]
 
-    move = random.choice(possiblemoves)
-    board[move] = ai_symbol
+        move = random.choice(possiblemoves)
+        board[move] = ai_symbol
+        print(f"AI places at location {move + 1}")
 
     # TODO C: Else, pick a random empty spot
 
@@ -93,11 +99,11 @@ def check_win(board, symbol):
 # TODO 4: check_full(board)
 # ==========================================================
 def check_full(board):
-    for i in range(9):
-        if board[i].isdigit():
-            return False
-        else: 
-            return True
+    if all(board[i].isdigit() for i in range(9)):
+        return True
+    else:
+        return False
+            
 
 # ==========================================================
 # MAIN GAME (NOW WITH A FEW TODOs)
@@ -120,7 +126,7 @@ def tic_tac_toe():
 
         # TODO (MAIN-4): Decide who starts ("Player" or "AI")
         # Simple option: always start with Player
-        turn = None  # replace this line
+        turn = "Player"  # replace this line
 
         while True:
             display_board(board)
